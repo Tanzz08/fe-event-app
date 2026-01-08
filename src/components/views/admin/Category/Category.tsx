@@ -47,6 +47,7 @@ const Category = () => {
   const renderCell = useCallback(
     (category: Record<string, unknown>, columnKey: Key) => {
       const cellValue = category[columnKey as keyof typeof category];
+      
 
       switch (columnKey) {
         case "icon":
