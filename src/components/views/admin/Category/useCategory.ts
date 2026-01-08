@@ -78,18 +78,19 @@ const useCategory = () => {
 
   const handleClearSearch = () => {
     router.push({
-        query: {
-            ...router.query,
-            search: "",
-            page: PAGE_DEFAULT
-        }
-    })
-  }
+      query: {
+        ...router.query,
+        search: "",
+        page: PAGE_DEFAULT,
+      },
+    });
+  };
 
   return {
     dataCategory,
     isLoadingCategory,
     isRefetchingCategory,
+    refetchCategory,
 
     currentPage,
     currentLimit,

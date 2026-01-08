@@ -75,8 +75,6 @@ const useRegister = () => {
 
   const handleRegister = (data: IRegister) => mutateRegister(data);
 
-  console.log(errors);
-
   return {
     visiblePassword,
     handleVisiblePassword,
