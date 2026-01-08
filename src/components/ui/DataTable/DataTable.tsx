@@ -24,7 +24,7 @@ interface PropTypes {
   data: Record<string, unknown>[];
   emptyContent: string;
   limit: string;
-  isLoading?: boolean
+  isLoading?: boolean;
   onChangeSearch: (e: ChangeEvent<HTMLInputElement>) => void;
   onChangeLimit: (e: ChangeEvent<HTMLSelectElement>) => void;
   onChangePage: (page: number) => void;
@@ -79,7 +79,7 @@ const DataTable = (props: PropTypes) => {
 
   const BottomContent = useMemo(() => {
     return (
-      <div className="flex items-center justify-center px-2 py-2 lg:justify-between">
+      <div className="flex items-center justify-center lg:justify-between">
         <Select
           className="hidden max-w-36 lg:block"
           size="md"
@@ -87,6 +87,7 @@ const DataTable = (props: PropTypes) => {
           selectionMode="single"
           onChange={onChangeLimit}
           startContent={<p className="text-small">Show:</p>}
+          disallowEmptySelection
         >
           {LIMIT_LISTS.map((item) => (
             <SelectItem key={item.value} value={item.value}>
@@ -94,14 +95,17 @@ const DataTable = (props: PropTypes) => {
             </SelectItem>
           ))}
         </Select>
-        <Pagination
-          isCompact
-          showControls
-          color="danger"
-          page={currentPage}
-          total={totalPages}
-          onChange={onChangePage}
-        />
+        {totalPages > 1 && (
+          <Pagination
+            isCompact
+            showControls
+            color="danger"
+            page={currentPage}
+            total={totalPages}
+            onChange={onChangePage}
+            loop
+          />
+        )}
       </div>
     );
   }, [limit, currentPage, totalPages, onChangeLimit, onChangePage]);
@@ -114,7 +118,7 @@ const DataTable = (props: PropTypes) => {
       bottomContentPlacement="outside"
       classNames={{
         base: "max-w-full",
-        wrapper: cn({"overflow-x-hidden": isLoading})
+        wrapper: cn({ "overflow-x-hidden": isLoading }),
       }}
     >
       <TableHeader columns={columns}>
@@ -125,11 +129,16 @@ const DataTable = (props: PropTypes) => {
         )}
       </TableHeader>
 
-      <TableBody items={data} emptyContent={emptyContent} isLoading={isLoading} loadingContent={
-        <div className="flex h-full w-full items-center justify-center bg-foreground-700/30 backdrop-blur-sm">
-            <Spinner color="danger"/>
-        </div>
-      }>
+      <TableBody
+        items={data}
+        emptyContent={emptyContent}
+        isLoading={isLoading}
+        loadingContent={
+          <div className="flex h-full w-full items-center justify-center bg-foreground-700/30 backdrop-blur-sm">
+            <Spinner color="danger" />
+          </div>
+        }
+      >
         {(item) => (
           <TableRow key={item._id as Key}>
             {(columnKey) => (
