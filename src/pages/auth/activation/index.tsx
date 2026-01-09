@@ -7,7 +7,6 @@ interface PropTypes {
 }
 
 const ActivationPage = (props: PropTypes) => {
-  console.log(props);
   return (
     <AuthLayout title="Acara | Activation">
       <div>
@@ -20,7 +19,6 @@ const ActivationPage = (props: PropTypes) => {
 export async function getServerSideProps(context: { query: { code: string } }) {
   try {
     const result = await authServices.activation({ code: context.query.code });
-    console.log(result.data.data);
     if (result.data.data) {
       return {
         props: {

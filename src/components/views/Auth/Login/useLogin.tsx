@@ -62,7 +62,6 @@ const useLogin = () => {
 
   const handleLogin = (data: ILogin) => mutateLogin(data);
 
-  console.log(errors);
 
   return {
     isVisible,
