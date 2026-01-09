@@ -13,41 +13,35 @@ import { Key, ReactNode, useCallback, useEffect } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { COLUMN_LISTS_CATEGORY } from "./Category.constants";
 import useCategory from "./useCategory";
-import InputFile from "@/components/ui/InputFile";
 import AddCategoryModal from "./AddCateogryModal";
 import DeleteCategoryModal from "./DeleteCategoryModal";
+import useChangeUrl from "@/hooks/useChangeUrl";
 
 const Category = () => {
   const { push, isReady, query } = useRouter();
   const {
-    currentPage,
-    currentLimit,
     dataCategory,
     refetchCategory,
-    handleSearch,
-    handleClearSearch,
-    handleChangePage,
-    handleChangeLimit,
+
     isRefetchingCategory,
     isLoadingCategory,
-    setURL,
     selectedId,
     setSelectedId,
   } = useCategory();
 
   const addCategoryModal = useDisclosure();
   const deleteCategoryModal = useDisclosure();
+  const { setUrl } = useChangeUrl();
 
   useEffect(() => {
     if (isReady) {
-      setURL();
+      setUrl();
     }
   }, [isReady]);
 
   const renderCell = useCallback(
     (category: Record<string, unknown>, columnKey: Key) => {
       const cellValue = category[columnKey as keyof typeof category];
-      
 
       switch (columnKey) {
         case "icon":
@@ -95,15 +89,9 @@ const Category = () => {
         <DataTable
           buttonTopContentLabel="Create Category"
           columns={COLUMN_LISTS_CATEGORY}
-          currentPage={Number(currentPage)}
           data={dataCategory?.data || []}
           emptyContent="Category is empty"
           isLoading={isLoadingCategory || isRefetchingCategory}
-          limit={String(currentLimit)}
-          onChangeLimit={handleChangeLimit}
-          onChangePage={handleChangePage}
-          onChangeSearch={handleSearch}
-          onClearSearch={handleClearSearch}
           onClickButtonTopContent={addCategoryModal.onOpen}
           renderCell={renderCell}
           totalPages={dataCategory?.pagination.totalPages}
