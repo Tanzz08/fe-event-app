@@ -2,6 +2,7 @@ import { ToasterContext } from "@/contexts/ToasterContext";
 import EventServices from "@/services/event.service";
 import { IEvent, IEventForm } from "@/types/Event";
 import { toDateStandard } from "@/utils/date";
+import { DateValue } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useContext } from "react";
@@ -52,30 +53,30 @@ const useDetailEvent = () => {
   const handleUpdateInfo = (data: IEventForm) => {
     const payload = {
       ...data,
-      startDate: data.startDate ? toDateStandard(data.startDate) : "",
-      endDate: data.endDate ? toDateStandard(data.endDate) : "",
+      startDate: toDateStandard(data.startDate as DateValue),
+      endDate: toDateStandard(data.endDate as DateValue),
     };
     mutateUpdateEvent(payload);
   };
 
   const handleUpdateLocation = (data: IEventForm) => {
     const payload = {
-      isOnline: data.isOnline === "true",
+      ...data,
       location: {
         address: `${data.address}`,
         region: `${data.region}`,
         coordinates: [Number(data.latitude), Number(data.longitude)],
       },
-      banner: data.banner,
     };
     mutateUpdateEvent(payload);
   };
 
-  const { data: dataDefaultRegion, isPending: isPendingDefaultRegion } = useQuery({
-    queryKey: ["defaultRegion"],
-    queryFn: () => EventServices.getRegencyById(dataEvent?.location?.region),
-    enabled: !!dataEvent?.location?.region,
-  });
+  const { data: dataDefaultRegion, isPending: isPendingDefaultRegion } =
+    useQuery({
+      queryKey: ["defaultRegion"],
+      queryFn: () => EventServices.getRegencyById(dataEvent?.location?.region),
+      enabled: !!dataEvent?.location?.region,
+    });
 
   return {
     dataEvent,
@@ -86,7 +87,7 @@ const useDetailEvent = () => {
     isPendingMutateUpdateEvent,
     isSuccessMutateUpdateEvent,
     dataDefaultRegion,
-    isPendingDefaultRegion
+    isPendingDefaultRegion,
   };
 };
 
