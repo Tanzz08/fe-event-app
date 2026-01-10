@@ -14,6 +14,7 @@ import useTicketTab from "./useTicketTab";
 import AddTicketModal from "./AddTicketModel";
 import DeleteTicketModal from "./DeleteTicketModal";
 import { ITicket } from "@/types/Ticket";
+import UpdateTicketModal from "./UpdateTicketModel";
 
 const TicketTab = () => {
   const { dataTicket, refetchTicket, isPendingTicket, isRefetchingTicket } =
@@ -37,9 +38,10 @@ const TicketTab = () => {
           return (
             <DropDowAction
               onPressButtonDetail={() => {
+                setSelectedDataTicket(ticket as ITicket);
                 updateTicketModal.onOpen();
-            }}
-            onPressButtonDelete={() => {
+              }}
+              onPressButtonDelete={() => {
                 setSelectedDataTicket(ticket as ITicket);
                 deleteTicketModal.onOpen();
               }}
@@ -81,6 +83,12 @@ const TicketTab = () => {
       <AddTicketModal {...addTicketModal} refetchTicket={refetchTicket} />
       <DeleteTicketModal
         {...deleteTicketModal}
+        selectedDataTicket={selectedDataTicket}
+        setSelectedDataTicket={setSelectedDataTicket}
+        refetchTicket={refetchTicket}
+      />
+      <UpdateTicketModal
+        {...updateTicketModal}
         selectedDataTicket={selectedDataTicket}
         setSelectedDataTicket={setSelectedDataTicket}
         refetchTicket={refetchTicket}
