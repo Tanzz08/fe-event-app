@@ -35,11 +35,11 @@ const InfoTab = (props: PropTypes) => {
     setValueUpdateInfo("description", `${dataCategory?.description}`);
   }, [dataCategory]);
 
-  useEffect(() => {
-    if (isSuccessUpdate) {
-      resetUpdateInfo();
-    }
-  }, [isSuccessUpdate]);
+  // useEffect(() => {
+  //   if (isSuccessUpdate) {
+  //     resetUpdateInfo();
+  //   }
+  // }, [isSuccessUpdate]);
 
   return (
     <Card className="w-full p-4 lg:w-1/2">

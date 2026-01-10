@@ -4,14 +4,12 @@ import useDebounce from "@/hooks/useDebounce";
 import useMediaHandling from "@/hooks/useMediaHandling";
 import CategoryServices from "@/services/category.service";
 import EventServices from "@/services/event.service";
-import { ICategory } from "@/types/Category";
 import { IEvent, IEventForm } from "@/types/Event";
 import { toDateStandard } from "@/utils/date";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getLocalTimeZone, now } from "@internationalized/date";
 import { DateValue } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -34,7 +32,6 @@ const schema = yup.object().shape({
 
 const useAddEventModal = () => {
   const { setToaster } = useContext(ToasterContext);
-  const router = useRouter();
   const debounce = useDebounce();
   const {
     isPendingMutateUploadFile,
@@ -58,8 +55,8 @@ const useAddEventModal = () => {
   const preview = watch("banner");
   const fileUrl = getValues("banner");
 
-  setValue('startDate', now(getLocalTimeZone()))
-  setValue('endDate', now(getLocalTimeZone()))
+  setValue("startDate", now(getLocalTimeZone()));
+  setValue("endDate", now(getLocalTimeZone()));
 
   const handleUploadBanner = (
     files: FileList,
@@ -132,18 +129,18 @@ const useAddEventModal = () => {
   const handleAddEvent = (data: IEventForm) => {
     const payload = {
       ...data,
-      isFeatured: Boolean(data.isFeatured),
-      isPublished: Boolean(data.isPublished),
-      isOnline: Boolean(data.isOnline),
-      startDate: toDateStandard(data.startDate),
-      endDate: toDateStandard(data.endDate),
+      isFeatured: data.isFeatured === "true",
+      isPublished: data.isPublished === "true",
+      isOnline: data.isOnline === "true",
+      startDate: data.startDate ? toDateStandard(data.startDate) : "",
+      endDate: data.endDate ? toDateStandard(data.endDate) : "",
       location: {
-        region: data.region,
+        region: `${data.region}`,
         coordinates: [Number(data.latitude), Number(data.longitude)],
       },
       banner: data.banner,
     };
-    mutateAddEvent(payload)
+    mutateAddEvent(payload);
   };
 
   return {

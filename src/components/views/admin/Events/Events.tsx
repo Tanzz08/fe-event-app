@@ -38,16 +38,16 @@ const Event = () => {
       const cellValue = event[columnKey as keyof typeof event];
 
       switch (columnKey) {
-        case "banner":
-          return (
-            <Image
-              className="aspect-video w-36 rounded-lg object-cover"
-              src={`${cellValue}`}
-              alt="icon"
-              width={200}
-              height={100}
-            />
-          );
+        // case "banner":
+        //   return (
+        //     <Image
+        //       className="aspect-video w-36 rounded-lg object-cover"
+        //       src={`${cellValue}`}
+        //       alt="icon"
+        //       width={200}
+        //       height={100}
+        //     />
+        //   );
         case "isPublish":
           return (
             <Chip
