@@ -14,7 +14,7 @@ const LandingPageLayout = (props: PropTypes) => {
     <Fragment>
       <PageHead title={title} />
       <LandingPageLayoutNavbar />
-      <div className=" py-10 mx-4">
+      <div className=" py-10 mx-6">
         {children}
       </div>
       <LandingPageLayoutFooter />
