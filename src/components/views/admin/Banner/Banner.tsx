@@ -16,6 +16,7 @@ import { COLUMN_LISTS_BANNER } from "./Banner.constants";
 import useChangeUrl from "@/hooks/useChangeUrl";
 import useBanner from "./useBanner";
 import AddBannerModal from "./AddBannerModal";
+import DeleteBannerModal from "./DeleteBanerModal";
 
 const Banner = () => {
   const { push, isReady, query } = useRouter();
@@ -109,6 +110,12 @@ const Banner = () => {
       )}
       <AddBannerModal
         {...addBannerModal}
+        refetchBanner={refetchBanners}
+      />
+      <DeleteBannerModal
+        {...deleteBannerModal}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
         refetchBanner={refetchBanners}
       />
     </section>
