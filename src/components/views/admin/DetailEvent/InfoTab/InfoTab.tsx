@@ -45,26 +45,14 @@ const InfoTab = (props: PropTypes) => {
       setValueUpdateInfo("description", `${dataEvent?.description}`);
       setValueUpdateInfo("slug", `${dataEvent?.slug}`);
       setValueUpdateInfo("category", `${dataEvent?.category}`);
-      if (dataEvent.startDate) {
-        const formattedStart = toInputDate(dataEvent.startDate);
-        // Pastikan hasil convert tidak undefined sebelum set
-        if (formattedStart) setValueUpdateInfo("startDate", formattedStart);
-      }
+      setValueUpdateInfo("startDate", toInputDate(`${dataEvent?.startDate}`));
 
-      if (dataEvent.endDate) {
-        const formattedEnd = toInputDate(dataEvent.endDate);
-        if (formattedEnd) setValueUpdateInfo("endDate", formattedEnd);
-      }
+      setValueUpdateInfo("endDate", toInputDate(`${dataEvent?.endDate}`));
       setValueUpdateInfo("isFeatured", `${dataEvent?.isFeatured}`);
-      setValueUpdateInfo("isPublished", `${dataEvent?.isPublished}`);
+      setValueUpdateInfo("isPublish", `${dataEvent?.isPublish}`);
     }
   }, [dataEvent]);
 
-  // useEffect(() => {
-  //   if (isSuccessUpdate) {
-  //     resetUpdateInfo();
-  //   }
-  // }, [isSuccessUpdate]);
 
   return (
     <Card className="w-full p-4 lg:w-1/2">
@@ -178,19 +166,17 @@ const InfoTab = (props: PropTypes) => {
 
           <Skeleton isLoaded={!!dataEvent} className="rounded-lg">
             <Controller
-              name="isPublished"
+              name="isPublish"
               control={controlUpdateInfo}
               render={({ field }) => (
                 <Select
                   {...field}
                   label="Status"
                   variant="bordered"
-                  isInvalid={errorsUpdateInfo.isPublished !== undefined}
-                  errorMessage={errorsUpdateInfo.isPublished?.message}
+                  isInvalid={errorsUpdateInfo.isPublish !== undefined}
+                  errorMessage={errorsUpdateInfo.isPublish?.message}
                   disallowEmptySelection
-                  defaultSelectedKeys={[
-                    dataEvent.isPublished ? "true" : "false",
-                  ]}
+                  defaultSelectedKeys={[dataEvent.isPublish ? "true" : "false"]}
                 >
                   <SelectItem key="true" value="true">
                     Publish
@@ -215,9 +201,7 @@ const InfoTab = (props: PropTypes) => {
                   isInvalid={errorsUpdateInfo.isFeatured !== undefined}
                   errorMessage={errorsUpdateInfo.isFeatured?.message}
                   disallowEmptySelection
-                  defaultSelectedKeys={[
-                    dataEvent.isPublished ? "true" : "false",
-                  ]}
+                  defaultSelectedKeys={[dataEvent.isPublish ? "true" : "false"]}
                 >
                   <SelectItem key="true" value="true">
                     Yes

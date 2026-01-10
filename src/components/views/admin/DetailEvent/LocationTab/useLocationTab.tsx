@@ -1,6 +1,5 @@
 import { DELAY } from "@/constants/list.constants";
 import useDebounce from "@/hooks/useDebounce";
-import CategoryServices from "@/services/category.service";
 import EventServices from "@/services/event.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +9,7 @@ import * as yup from "yup";
 
 const schemaUpdateLocation = yup.object().shape({
   isOnline: yup.string().required("Please select online or offline"),
+  address: yup.string().required("Please input address"),
   region: yup.string().required("Please select region"),
   longitude: yup.string().required("Please input longitude coordinate"),
   latitude: yup.string().required("Please input latitude coordinate"),
