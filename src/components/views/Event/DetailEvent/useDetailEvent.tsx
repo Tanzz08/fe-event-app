@@ -1,0 +1,111 @@
+import EventServices from "@/services/event.service";
+import TicketServices from "@/services/ticket.service";
+import { ICart, ITicket } from "@/types/Ticket";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useContext, useMemo, useState } from "react";
+import defaultCart from "./DetailEvent.constants";
+import OrderServices from "@/services/order.service";
+import { ToasterContext } from "@/contexts/ToasterContext";
+
+const useDetailEvent = () => {
+  const router = useRouter();
+  const { setToaster } = useContext(ToasterContext);
+  const { slug } = router.query;
+
+  const getEventBySlug = async () => {
+    const finalSlug = String(slug);
+    const { data } = await EventServices.getEventBySlug(`${finalSlug}`);
+    return data.data;
+  };
+
+  const { data: dataDetailEvent } = useQuery({
+    queryKey: ["Event By Slug", slug],
+    queryFn: getEventBySlug,
+    enabled: router.isReady && !!slug,
+  });
+
+  const getTicketByEventId = async () => {
+    const { data } = await TicketServices.getEventByEventId(
+      `${dataDetailEvent._id}`,
+    );
+    return data.data;
+  };
+
+  const { data: dataTicket } = useQuery({
+    queryKey: ["Ticket", dataDetailEvent?._id],
+    queryFn: getTicketByEventId,
+    enabled: !!dataDetailEvent?._id,
+  });
+
+  const [cart, setCart] = useState<ICart>(defaultCart);
+
+  const dataTicketInCart = useMemo(() => {
+    if (dataTicket) {
+      return dataTicket.find((ticket: ITicket) => ticket._id === cart.ticket);
+    }
+    return null;
+  }, [dataTicket, cart]);
+
+  const handleAddToCart = (ticket: string) => {
+    setCart({
+      events: dataDetailEvent._id as string,
+      ticket,
+      quantity: 1,
+    });
+  };
+
+  const handlChangeQuantity = (type: "increment" | "decrement") => {
+    if (type === "increment") {
+      if (cart.quantity < dataTicketInCart?.quantity) {
+        setCart((prev: ICart) => ({
+          ...prev,
+          quantity: prev.quantity + 1,
+        }));
+      }
+    } else {
+      if (cart.quantity <= 1) {
+        setCart(defaultCart);
+      } else {
+        setCart((prev: ICart) => ({
+          ...prev,
+          quantity: prev.quantity - 1,
+        }));
+      }
+    }
+  };
+
+  const createOrder = async () => {
+    const { data } = await OrderServices.createOrder(cart);
+    return data.data;
+  };
+
+  const { mutate: mutateCreateOrder, isPending: isPendingCreateOrder } =
+    useMutation({
+      mutationFn: createOrder,
+      onError: (error) => {
+        setToaster({
+          type: "error",
+          message: error.message,
+        });
+      },
+      onSuccess: (result) => {
+        const transactionToken = result.payment.token;
+        (window as any).snap.pay(transactionToken);
+      },
+    });
+
+  return {
+    dataDetailEvent,
+    dataTicket,
+
+    cart,
+    dataTicketInCart,
+    handleAddToCart,
+    handlChangeQuantity,
+    mutateCreateOrder,
+    isPendingCreateOrder
+  };
+};
+
+export default useDetailEvent;

@@ -41,12 +41,12 @@ const useHome = () => {
     return data.data;
   };
 
-  const currentEventQuery = `limit=${LIMIT_EVENT}&page=${PAGE_DEFAULT}&isPublished=true`;
+  const currentEventQuery = `limit=${LIMIT_EVENT}&page=${PAGE_DEFAULT}`;
 
   const { data: dataFeaturedEvents, isLoading: isLoadingFeaturedEvents } =
     useQuery({
       queryKey: ["FeaturedEvents"],
-      queryFn: () => getEvents(`${currentEventQuery}&isFeatured=true`),
+      queryFn: () => getEvents(`${currentEventQuery}&isPublish=true`),
     });
 
   const { data: dataLatestEvents, isLoading: isLoadingLatestEvents } = useQuery(

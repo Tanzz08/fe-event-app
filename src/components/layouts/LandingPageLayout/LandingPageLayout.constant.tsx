@@ -1,6 +1,7 @@
 import {
   FaChargingStation,
   FaFacebook,
+  FaInstagram,
   FaTiktok,
   FaTwitter,
   FaYoutube,
@@ -20,7 +21,7 @@ const SOCIAL_ITEMS = [
   {
     label: "Instagram",
     href: "https://instagram.com/tnzz.ll",
-    icon: <FaChargingStation />,
+    icon: <FaInstagram />,
   },
   {
     label: "Facebook",
