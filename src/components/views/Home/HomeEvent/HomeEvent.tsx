@@ -1,8 +1,6 @@
 import CardEvent from "@/components/ui/CardEvent";
 import { IEvent } from "@/types/Event";
 import Link from "next/link";
-import { Fragment } from "react";
-import { string } from "yup";
 
 interface PropTypes {
   title: string;
@@ -21,7 +19,7 @@ const HomeEvent = (props: PropTypes) => {
         </Link>
       </div>
       <div className="grid auto-cols-[20rem] grid-flow-col gap-6 overflow-x-auto py-2 pb-4 lg:grid-cols-4 lg:px-1">
-        {!isLoading
+        {!isLoading 
           ? events?.map((event) => (
               <CardEvent
                 event={event}

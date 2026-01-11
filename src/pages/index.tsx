@@ -4,14 +4,12 @@ import Home from "@/components/views/Home/Home";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const HomePage=() => {
+const HomePage = () => {
   return (
     <LandingPageLayout title="Home">
-      <Home>
-        
-      </Home>
+      <Home></Home>
     </LandingPageLayout>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

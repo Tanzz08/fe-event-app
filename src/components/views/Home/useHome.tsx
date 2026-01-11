@@ -41,7 +41,7 @@ const useHome = () => {
     return data.data;
   };
 
-  const currentEventQuery = `limit=${LIMIT_EVENT}&page=${PAGE_DEFAULT}&isPublish=true`;
+  const currentEventQuery = `limit=${LIMIT_EVENT}&page=${PAGE_DEFAULT}&isPublished=true`;
 
   const { data: dataFeaturedEvents, isLoading: isLoadingFeaturedEvents } =
     useQuery({

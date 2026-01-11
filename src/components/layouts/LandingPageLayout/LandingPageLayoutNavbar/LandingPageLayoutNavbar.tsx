@@ -7,6 +7,8 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input,
+  Listbox,
+  ListboxItem,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -14,8 +16,8 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
+  Spinner,
 } from "@nextui-org/react";
-import Image from "next/image";
 import Link from "next/link";
 import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constant";
 import { cn } from "@/utils/cn";
@@ -24,11 +26,21 @@ import { CiSearch } from "react-icons/ci";
 import { signOut, useSession } from "next-auth/react";
 import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
 import { Fragment } from "react";
+import { IEvent } from "@/types/Event";
+import Image from "next/image";
 
 const LandingPageLayoutNavbar = () => {
   const router = useRouter();
   const session = useSession();
-  const { dataProfile } = useLandingPageLayoutNavbar();
+  const {
+    dataProfile,
+    handleSearch,
+    dataEventsSearch,
+    isLoadingEventsSearch,
+    isRefetchingEventsSearch,
+    search,
+    setSearch,
+  } = useLandingPageLayoutNavbar();
   return (
     <Navbar maxWidth="full" isBordered isBlurred={false} shouldHideOnScroll>
       <div className="flex items-center gap-8">
@@ -58,15 +70,65 @@ const LandingPageLayoutNavbar = () => {
       </div>
       <NavbarContent justify="end">
         <NavbarMenuToggle className="lg:hidden" />
-        <NavbarItem className="hidden lg:flex">
+        <NavbarItem className="hidden lg:flex relative">
           <Input
             isClearable
             className="w-[300px]"
             placeholder="Search Event"
             startContent={<CiSearch />}
-            onClear={() => {}}
-            onChange={() => {}}
+            onClear={() => setSearch("")}
+            onChange={handleSearch}
           />
+          {search !== "" && (
+            <div className="absolute left-0 top-full z-50 w-full">
+              {" "}
+              {/* Wrapper div untuk positioning yang lebih aman */}
+              <Listbox
+                aria-label="Search Results"
+                className="mt-2 w-full rounded-medium border bg-white p-2 shadow-lg"
+                emptyContent="No events found." // Tampilkan ini jika data kosong dan tidak loading
+              >
+                {/* 1. KONDISI LOADING */}
+                {isLoadingEventsSearch || isRefetchingEventsSearch ? (
+                  <ListboxItem
+                    key="loading"
+                    isReadOnly
+                    className="flex h-20 items-center justify-center"
+                  >
+                    <div className="flex w-full justify-center">
+                      <Spinner color="danger" size="sm" />
+                    </div>
+                  </ListboxItem>
+                ) : (
+                  // 2. KONDISI RENDERING DATA MANUAL (Tanpa prop items di Listbox)
+                  (dataEventsSearch?.data || []).map((item: IEvent) => (
+                    <ListboxItem
+                      key={item._id}
+                      href={`/event/${item.slug}`}
+                      textValue={item.name} // Penting untuk aksesibilitas
+                      as={Link} // Agar item berfungsi sebagai link
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="relative h-10 w-16 flex-shrink-0">
+                          <Image
+                            src={`${item.banner}`}
+                            alt={`${item.name}`}
+                            fill
+                            className="rounded-md object-cover"
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="truncate text-small font-bold">
+                            {item.name}
+                          </span>
+                        </div>
+                      </div>
+                    </ListboxItem>
+                  ))
+                )}
+              </Listbox>
+            </div>
+          )}
         </NavbarItem>
         {session.status === "authenticated" ? (
           <NavbarItem className="hidden lg:block">
